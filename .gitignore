@@ -4,3 +4,4 @@ thumbs.db
 node_modules
 npm-debug.log
 build
+src/firebase-config.js

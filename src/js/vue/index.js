@@ -1,11 +1,15 @@
-let Vue = require('vueCommon');
-let App = require('./app.vue');
-let Utils = require('./utils/filters');
+import Vue from '../../../node_modules/vue/dist/vue.common';
+import App from './components/app.vue';
+import store from './store';
+import router from './router';
+import Filters from './utils/filters';
 
-Vue.filter('date', Utils.dateFilter);
+Vue.filter('date', Filters.date);
 
 new Vue({
   el: '#app',
+  store,
+  router,
   components: { App },
   template: `<app></app>`
 });

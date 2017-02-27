@@ -3,7 +3,7 @@ function addLeadingZero(number) {
 }
 
 module.exports = {
-  dateFilter: function(value) {
+  date: function(value) {
     let date = new Date(value);
     let year = date.getFullYear();
     let month = addLeadingZero(date.getMonth());
