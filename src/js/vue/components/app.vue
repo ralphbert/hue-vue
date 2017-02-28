@@ -8,14 +8,32 @@
   export default {
     computed: mapState({
       user: 'user',
-      errors: 'errors'
+      errors: 'errors',
+      messages: 'messages',
     }),
+    methods: {
+      logout: function() {
+        this.$store.dispatch(Actions.LOGOUT);
+      }
+    },
     components: { Register, Login },
     mounted: function () {
-      var self = this;
-      firebase.auth().onAuthStateChanged(function (user) {
-        console.log('onAuthStateChanged', arguments);
-        self.$store.commit(Actions.USER_CHANGED, user);
+      firebase.auth().onAuthStateChanged((user) => {
+        this.$store.commit(Actions.USER_CHANGED, user);
+      });
+
+      firebase.database().ref('messages').limitToLast(100).on('value', (messages) => {
+        console.log(messages.val());
+        var result = [];
+        messages.forEach(function(childSnapshot) {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          result.push({
+            id: childKey,
+            data: childData
+          });
+        });
+        this.$store.commit(Actions.SET_CHAT_MESSAGES, result);
       });
     }
   };
@@ -25,18 +43,23 @@
     <div class="container">
         <h2>HUE Chat</h2>
 
-        {{ errors }}
-
         <div class="error" v-if="errors">
             <div v-for="messages, key in errors">
                 <div v-for="message in messages">{{ messages }}</div>
-                <div><a href="#" v-on:click.prevent="$store.commit('CLEAR_ERROR', key)">Clear</a></div>
+                <div v-if="messages.length"><a href="#" v-on:click.prevent="$store.commit('CLEAR_ERROR', key)">Clear</a></div>
             </div>
         </div>
 
-        {{ user }}
+        <nav v-if="user">
+            <ul>
+                <li><router-link to="/chat">Chat</router-link></li>
+                <li><router-link to="/profile">Profile</router-link></li>
+                <li><a href="#" v-on:click.prevent="logout">Logout {{ user.email }}</a></li>
+            </ul>
+        </nav>
 
-        <login v-if="user"></login>
+
+        <login v-if="!user"></login>
         <register v-if="!user"></register>
 
         <router-view ></router-view>

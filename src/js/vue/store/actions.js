@@ -4,3 +4,6 @@ export const LOGOUT = 'LOGOUT';
 export const USER_CHANGED = 'USER_CHANGED';
 export const ADD_ERROR = 'ADD_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+export const SET_CHAT_MESSAGES = 'SET_CHAT_MESSAGES';
+export const ADD_CHAT_MESSAGE = 'ADD_CHAT_MESSAGE';
+export const DELETE_CHAT_MESSAGE = 'DELETE_CHAT_MESSAGE';

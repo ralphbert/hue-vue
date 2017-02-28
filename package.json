@@ -41,6 +41,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "firebase": "^3.6.10",
+    "materialize-css": "^0.98.0",
     "spin.js": "^2.3.2",
     "vue": "^2.1.10",
     "vue-router": "^2.3.0",

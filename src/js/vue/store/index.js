@@ -9,7 +9,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
-    errors: {}
+    errors: {},
+    messages: []
   },
   mutations: {
     [Actions.USER_CHANGED]: function (store, user) {
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     },
     [Actions.CLEAR_ERROR]: function (store, type) {
       store.errors = { ...store.errors, [type]: [] }
+    },
+    [Actions.SET_CHAT_MESSAGES]: function (store, messages) {
+      store.messages = messages;
     }
   },
 
@@ -52,8 +56,9 @@ export default new Vuex.Store({
         console.error(e);
         context.commit(Actions.ADD_ERROR, { type: 'auth', message: e.message });
       }).then(function() {
-        alert(0);
+        console.log('signInWithEmailAndPassword', arguments);
       }, function(e) {
+        console.log('ERROR', arguments);
         console.error(e);
       });
     },
@@ -62,6 +67,20 @@ export default new Vuex.Store({
       firebase.auth().signOut().then(function() {}, function(e) {
         context.commit(Actions.ADD_ERROR, { type: 'auth', message: e.message });
       });
+    },
+    [Actions.ADD_CHAT_MESSAGE]: function (context, message) {
+      var messagesRef = firebase.database().ref('messages');
+      var messageRef = messagesRef.push();
+      messageRef.set({
+        text: message,
+        user: context.state.user.email,
+        createdAt: new Date()
+      });
+    },
+    [Actions.DELETE_CHAT_MESSAGE]: function (context, id) {
+      console.log(Actions.DELETE_CHAT_MESSAGE, id);
+      var messagesRef = firebase.database().ref('messages/' + id);
+      messagesRef.remove();
     }
   },
 
